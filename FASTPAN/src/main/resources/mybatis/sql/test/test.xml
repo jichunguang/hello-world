@@ -23,4 +23,8 @@
   
   </select>
   
+  <delete id="delete" parameterType="com.fastpan.dao.pojo.test.Test">
+  	delete from test where id=#{id}
+  </delete>
+  
 </mapper>

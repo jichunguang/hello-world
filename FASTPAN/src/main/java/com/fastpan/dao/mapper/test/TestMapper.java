@@ -10,4 +10,6 @@ public interface TestMapper {
     int insertTest (Test test);
     
     List<Test> selectAll();
+    
+    int delete(Test test); 
 }

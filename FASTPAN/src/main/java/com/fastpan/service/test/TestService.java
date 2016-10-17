@@ -18,7 +18,10 @@ public class TestService implements TestFacede{
 
 @Autowired
 TestMapper testMapper;
-
+	/**
+	 * 测试调用数据库OK
+	 */
+	@Override
 	public Object test() {
 		// TODO Auto-generated method stub
 		System.out.println("111111service");
@@ -37,7 +40,15 @@ TestMapper testMapper;
 		
 		return null;
 	}
-	
-	
+	/**
+	 * 测试事务OK
+	 */
+	@Override
+	public void deleteTest(Test test){
+		int i = testMapper.insertTest(new Test(1,"22"));
+		int j = testMapper.delete(new Test(2,"22"));
+		
+		System.out.println("增加的方法"+i+","+"删除的方法"+j);
+	}
 	
 }
