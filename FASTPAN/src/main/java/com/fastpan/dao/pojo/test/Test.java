@@ -1,4 +1,4 @@
-package com.fastpan.dao.pojo;
+package com.fastpan.dao.pojo.test;
 
 public class Test {
 	private int id ;

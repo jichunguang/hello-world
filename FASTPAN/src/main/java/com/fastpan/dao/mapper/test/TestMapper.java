@@ -1,8 +1,9 @@
-package com.fastpan.dao.mapper;
+package com.fastpan.dao.mapper.test;
 
 import java.util.List;
 
-import com.fastpan.dao.pojo.Test;
+
+import com.fastpan.dao.pojo.test.Test;
 
 public interface TestMapper {
 	List<Test> queryob();

@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastpan.dao.mapper.TestMapper;
-import com.fastpan.dao.pojo.Test;
-import com.fastpan.facade.facade.TestFacede;
+import com.fastpan.dao.mapper.test.TestMapper;
+import com.fastpan.dao.pojo.test.Test;
+import com.fastpan.facade.test.TestFacede;
 
 
 
