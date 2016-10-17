@@ -29,10 +29,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		</tr>
   
   </c:forEach>
-  <form action="test3">
+  <form action="test4" method="POST" enctype="multipart/form-data">
   	<tr>
   			<td><input type="text" name="id" ></td>
   			<td><input type="text" name="name" ></td>
+  			<td><input type="file" name="file" ></td>
   			<td><input type="submit" value="提交" ></td>
   		</tr>
   	</form>	
