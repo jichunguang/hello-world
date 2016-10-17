@@ -22,7 +22,7 @@ TestMapper testMapper;
 	 * 测试调用数据库OK
 	 */
 	@Override
-	public Object test() {
+	public List<Test> test() {
 		// TODO Auto-generated method stub
 		System.out.println("111111service");
 		List<Test> list = testMapper.queryob();
@@ -38,7 +38,7 @@ TestMapper testMapper;
 			System.out.println("对象"+test);
 		}
 		
-		return null;
+		return list;
 	}
 	/**
 	 * 测试事务OK

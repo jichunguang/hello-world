@@ -30,7 +30,9 @@
 		<property name="basePackage" value="com.fastpan.dao.mapper.*"/>
 		<property name="sqlSessionFactoryBeanName" value="trpSqlSessionFactory" />
 	</bean>
+	
 
+    
 	<bean id="trpTxManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
