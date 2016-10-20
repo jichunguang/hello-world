@@ -1,0 +1,24 @@
+一
+
+.maven的pom报plugins错误的解决方法.
+引用
+Failure to transfer org.apache.maven.plugins:maven-surefire-plugin:pom:2.7.1 from http://repo1.maven.org/maven2 was cached in the local repository, resolution will not be reattempted until the update interval of central has elapsed or updates are forced
+
+碰到一个类似以上的错误.
+原因是maven的plugin并未下载到本地.
+
+如果你查看
+引用
+~\.m2\repository\org\apache\maven\plugins\maven-surefire-plugin\2.7.1
+
+的话,会发现里面只有一个
+
+maven-surefire-plugin-2.7.1.pom.lastUpdated
+
+的文件.
+而并没有maven-surefire-plugin-2.7.1.jar
+
+解决办法:
+1.删除所有以lastUpdated结尾的文件
+2.右键点击project -> Maven - Update Dependencies（Update Project...）
+
