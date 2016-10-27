@@ -1,9 +1,0 @@
-
-database£ºtest
-
-CREATE table test(
-
- id int(4),
-	name varchar(20)
-
-)
