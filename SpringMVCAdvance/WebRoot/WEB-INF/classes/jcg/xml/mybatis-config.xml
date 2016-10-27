@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    
+	<typeAliases>
+		<typeAlias alias="s" type="java.lang.String" />
+		<typeAlias alias="i" type="java.lang.Integer" />
+		
+		
+	</typeAliases>
+	<environments default="development">
+	<!-- 方法二(步骤2：配置文件中对应的键) ：id值与默认相同则起作用,可配置多个环境标签-->
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED" > 
+				
+				
+				<!-- 方法三： 配置连接数据库各参数值 -->		
+				 <property name="driver" value="com.mysql.jdbc.Driver" /> 
+				 <property name="url"	value="jdbc:mysql://localhost:3306/classmanager" /> 
+				 <property 	name="username" value="root" /> 
+				 <property name="password" 	value="root" />
+				 
+			</dataSource>
+			</environment>		
+	</environments>	
+	<mappers>
+		<mapper resource="jcg/xml/TbUser.xml" /> 
+		<mapper resource="jcg/xml/ClassInfo.xml"/>
+	</mappers>
+</configuration>
+
+
+

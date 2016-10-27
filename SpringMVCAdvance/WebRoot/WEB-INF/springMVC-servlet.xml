@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 
+	 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	
+	http://www.springframework.org/schema/context
+	 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd"><!--
+	
+	  <context:component-scan base-package="controller"></context:component-scan>
+    
+    -->
+    
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">     
+       <property name="prefix" value="/jsp/" />     
+        <property name="suffix" value=".jsp" />     
+    </bean> 
+    
+    <bean id="tbUserDAOImpl" class="jcg.dao.TbUserDAOImpl" >
+    </bean>
+    
+    <bean id="tbUserServiceImpl" class="jcg.service.TbUserServiceImpl">
+    	<property name="tbUserDAOImpl" ref="tbUserDAOImpl"></property>
+    </bean>
+    
+    <bean id="TbUserController" class="jcg.controller.TbUserController">
+    	<property name="tbUserServiceImpl" ref="tbUserServiceImpl"></property> 
+    	
+    </bean>
+    
+    
+     
+     <bean id="classInfoDAOImpl" class="jcg.dao.ClassInfoDAOImpl">
+     	
+     </bean>
+     
+     <bean id="clssInfoServiceImpl" class="jcg.service.ClassInfoServiceImpl">
+     	<property name="classInfoDAOImpl"  ref="classInfoDAOImpl"></property>
+     </bean>
+     
+     <bean id="classInfoController" class="jcg.controller.ClassInfoController">
+     	<property name="classInfoServiceImpl" ref="clssInfoServiceImpl"></property>
+     
+     </bean>
+     
+     
+     
+    
+    
+    
+    
+
+    <bean  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+           <props>
+              <prop key="/login">TbUserController</prop> 
+               <prop key="/query">classInfoController</prop> 
+        
+           </props>
+        </property>
+    </bean>
+</beans>

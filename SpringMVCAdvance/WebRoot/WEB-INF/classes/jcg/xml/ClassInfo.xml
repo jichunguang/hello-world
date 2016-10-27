@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jcg.dao.ClassInfoDAOImpl">
+  <!-- 代替文档中部分内容，此处代替表中的列名 -->
+   
+ 	<select id="queryAll"  resultType="jcg.bean.ClassInfo">
+ 	
+ 			select * from class_info order by createdata desc
+ 
+ 	</select>
+ 	
+ 	<select id="ajaxQueryClassFullName" parameterType="s" resultType="jcg.bean.ClassInfo">
+ 			select * from class_info where classfullname =#{str}
+ 		
+ 	</select>
+		
+	<select id="ajaxQueryClassEasyName" parameterType="s" resultType="jcg.bean.ClassInfo">
+			select * from class_info where classeasyname  =#{str}
+	</select>
+	
+	<select id="queryById" parameterType="i" resultType="jcg.bean.ClassInfo">
+			select * from class_info where id =#{id}
+	
+	</select>
+	<update id="update" parameterType="jcg.bean.ClassInfo">
+			update 
+			
+				 class_info 
+			
+			set 
+				 classfullname=#{classfullname},
+  				 classeasyname=#{classeasyname},
+    			 classnature=#{classnature},
+   				 startclass=#{startclass},
+    			 endclass=#{endclass},
+    			 state=#{state}
+    		where
+    			
+    			 id=#{id}
+	
+	</update>
+	
+	<delete id="delete"  parameterType="i">
+		delete from class_info where id=#{id}
+	</delete>
+	
+	
+	<insert id="add"  parameterType="jcg.bean.ClassInfo">
+		insert into 
+			class_info(
+			cid,
+			createdata ,
+			classfullname,
+			classeasyname ,
+			classnature , 
+			startclass ,
+			endclass ,
+			state )
+		values(
+			#{cid},
+			#{createdata},
+			#{classfullname},
+			#{classeasyname},
+			#{classnature},
+			#{startclass},
+			#{endclass},
+			#{state}
+		)	
+	
+	
+	
+	</insert>
+	
+	
+	
+</mapper>
