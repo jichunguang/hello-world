@@ -1,0 +1,257 @@
+摘自：http://www.tuicool.com/articles/2qUvuuz
+
+
+
+Jackson的简单用法 - Naa
+时间 2014-08-06 08:52:00  博客园-Java
+原文  http://www.cnblogs.com/naaoveGIS/p/3893651.html
+主题 Java
+1简介
+
+Jackson具有比较高的序列化和反序列化效率，据测试，无论是哪种形式的转换，Jackson > Gson > Json-lib，而且Jackson的处理能力甚至高出Json-lib近10倍左右，且正确性也十分高。相比之下，Json-lib似乎已经停止更新，最新的版本也是基于JDK15，而Jackson的社区则较为活跃。
+
+下面，结合实例来对Jackson的用法进行简单介绍。
+
+2使用
+
+Jackson提供了很多类和方法，而在序列化和反序列化中使用的最多的类则是ObjectMapper这个类，此类比较类似于Json-lib中JsonObject和ArrayObject。此类中提供了readTree()，readValue(),writeValueAsString()等方法用于转换。具体关于此类的说明文档地址是： http://jackson.codehaus.org/1.7.9/javadoc/org/codehaus/jackson/map/ObjectMapper.html 。
+
+为了避免重复描述，下面中所涉及到的objectMapper均是来至于ObjectMapper objectMapper = new ObjectMapper()。下面将按照序列化和反序列化两个方面来简单介绍用法。
+
+2.1序列化
+
+2.1.1 对java自带类进行序列化
+
+2.1.1.1测试例子
+
+List list=new ArrayList();
+
+list.add(1);
+
+list.add(2);
+
+list.add(3);
+
+2.1.1.2实现序列化
+
+String teststringlist=objectMapper.writeValueAsString(list);
+
+System.out.println(teststringlist);
+
+在控制台输出的结果是：
+
+[1,2,3]
+
+2.1.1.3结论
+
+Jackson对一般类型的序列化是能简单实现的。
+
+2.1.2 对自定义类的序列化
+
+2.1.2.1测试例子
+
+public class student {
+
+private int age=10;
+
+private String name="hhh";
+
+public String[] list={"hao","haouhao","keyi"};
+
+public Date time=new Date();
+
+public int getAge() {
+
+return age;
+
+}
+
+public void setAge(int age) {
+
+this.age = age;
+
+}
+
+public String getName() {
+
+return name;
+
+}
+
+public void setName(String name) {
+
+this.name = name;
+
+}
+
+}
+
+为使例子更具有通用性，此类中包含了值类型int，引用类型String，String[]，还包含了日期类型Date。
+
+2.1.2.2实现序列化
+
+student st=new student();
+
+String teststringstu=objectMapper.writeValueAsString(st);
+
+System.out.println(teststringstu);
+
+在控制台输出的结果是：
+
+{"list":["hao","haouhao","keyi"],"time":1375429228382,"name":"hhh","age":10}
+
+2.1.2.3结论
+
+通过输出，可见转换得到的Json串是符合格式的。但是，时间的表示有点不符合标准。下面将介绍对时间格式的修改。
+
+2.1.3对时间格式的定义
+
+Jackson有自己的默认时间格式，即timestamps形式，其效果即如上结果所显示的（例如：1375429228382）。如果想设置此格式是无效，通过objectMapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false)便可设置，这样将使时间生成使用所谓的使用 [ISO-8601 ]-compliant notation, 输出类似如下格式的时间: "1970-01-01T00:00:00.000+0000"。
+
+当然，也可以自定义输出的时间格式。
+
+2.1.3.1自定义时间格式的实现
+
+例子还采用上面所介绍的student类。
+
+student st=new student();
+
+java.text.DateFormat myFormat = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+objectMapper.getSerializationConfig().setDateFormat(myFormat);
+
+String teststringstu=objectMapper.writeValueAsString(st);
+
+System.out.println(teststringstu);
+
+控制台上输出的记过是：
+
+{"list":["hao","haouhao","keyi"],"time":"2013-08-02 03:48:20","name":"hhh","age":10}
+
+2.1.3.2结论
+
+可见时间输出格式变成了我们想要的了。在Jackson中定义时间输出格式的方法比在Json-lib中对时间格式的定义简便很多。
+
+2.1.4 另一种序列化方法
+
+2.1.4.1实现序列化
+
+所用例子依然是之前的student类。
+
+student st=new student();
+
+JsonGenerator jsonGenerator = objectMapper.getJsonFactory().createJsonGenerator(System.out, JsonEncoding.UTF8);
+
+jsonGenerator.writeObject(st);
+
+System.out.println();
+
+控制台上的输出结果是：
+
+{"list":["hao","haouhao","keyi"],"time":1375429228382,"name":"hhh","age":10}
+
+2.1.4.2结论
+
+此方法同样可以得到上面方法的值。但是注意此方法中的这个函数：createJsonGenerator（），它需要两个参数，一个是OutputStream类型参数，一个是JsonEncoding类型参数。通过这两个参数，我们可以了解到，此方法不仅可以将Json直接写入网络流，还可以将Json写入文件流或者内存流。所以用途更广。
+
+2.2 反序列化
+
+2.2.1 一次性反序列化
+
+此方法中主要利用ObjectMapper提供的<testJsonClass> readValue(String content, Class<testJsonClass> valueType)方法。此方法需要输入Json串以及对应的需要填充的类的Class，返回填充后的类。
+
+2.2.1.1将Json串解析到自定义类中
+
+当Json串为：
+
+String test1="{"objectID":357,"geoPoints":[{"x":504604.59802246094,"y":305569.9150390625}]}"时。
+
+首先自定义一个类：
+
+public class testJsonClass
+
+{
+
+public int objectID;
+
+public List geoPoints=new ArrayList();
+
+}
+
+然后利用下面段代码将Json反序列化到此类中：
+
+testJsonClass testClass= objectMapper.readValue(test1, testJsonClass.class);
+
+利用System.out.println(testClass.objectID);System.out.println(testClass.geoPoints)可以在控制台上看到输出的值为：
+
+357
+
+[{x=504604.59802246094, y=305569.9150390625}]
+
+2.2.1.2 将Json串反序列化到系统自带的类中
+
+当Json串是
+
+String json = "{"error":0,"data":{"name":"ABC","age":20,"phone":{"home":"abc","mobile":"def"},"friends":[{"name":"DEF","phone":{"home":"hij","mobile":"klm"}},{"name":"GHI","phone":{"home":"nop","mobile":"qrs"}}]},"other":{"nickname":[]}}"。
+
+用系统自带的Map定义一个变量：Map<String, Map<String, Object>>  maps。然后利用maps = objectMapper.readValue(json, Map.class)便可将Json反序列化到变量maps中。
+
+通过System.out.println(maps.get("error"));System.out.println((Object)(maps.get("data").get("phone")))，可在控制台中得到下面的结果：
+
+0
+
+{home=abc, mobile=def}
+
+2.2.2渐次反序列化
+
+此方法更灵活，可以只将用户感兴趣的Json串信息值提取出来。主要利用ObjectMapper提供的readTree和Jackson提供的JsonNode类来实现。
+
+2.2.2.1测试例子
+
+String test="{"results":[{"objectID":357,"geoPoints":[{"x":504604.59802246094,"y":305569.9150390625}]},{"objectID":358,"geoPoints":[{"x":504602.2680053711,"y":305554.43603515625}]}]}";
+
+此Json串比较复杂，包含了嵌套数组的形式，具有通用性。
+
+2.2.2.2实现反序列化
+
+JsonNode node= objectMapper.readTree(test);      //将Json串以树状结构读入内存
+
+JsonNode contents=node.get("results");//得到results这个节点下的信息
+
+for(int i=0;i<contents.size();i++)  //遍历results下的信息，size()函数可以得节点所包含的的信息的个数，类似于数组的长度
+
+{
+
+System.out.println(contents.get(i).get("objectID").getIntValue()); //读取节点下的某个子节点的值
+
+JsonNode geoNumber=contents.get(i).get("geoPoints");
+
+for(int j=0;j<geoNumber.size();j++)     //循环遍历子节点下的信息
+
+{
+
+System.out.println(geoNumber.get(j).get("x").getDoubleValue()+"  "+geoNumber.get(j).get("y").getDoubleValue());
+
+}
+
+}
+
+在控制台下输出的结果是：
+
+357
+
+504604.59802246094  305569.9150390625
+
+358
+
+504602.2680053711  305554.43603515625
+
+2.2.2.3结论
+
+此方法类似于XML解析中的DOM方式解析，其好处是结构明细，便于提取想要的信息。当然，其缺点也和此方法一样：耗时费空间。
+
+3.总结
+
+Jackson关于Json的操作主要如上所示，其方法使用起来很便利，而且也很灵活，即提供了一次性完成的操作，也提供了可以按需读取信息的操作。并且Jackson的功能很齐全，可以对序列化和反序列化进行多种细节的控制，例如注解功能和对于Hibernate的延迟注入功能以及设置时间格式功能等，因为这些功能目前不太需要，所以仔细研究留待以后。同时，Jackson还支持对XML的一系列序列化和反序列化的操作，其思路与解析Json的大致相同。
+
+对于Jackson目前的缺点，网上有人测试所比Json-lib更占内存一些。而利用空间换时间，一般是值得的。

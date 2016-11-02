@@ -1,0 +1,86 @@
+System.setProperty("http.proxyHost", "proxy.neuedu.com");   
+		System.setProperty("http.proxyPort", "8080"); 
+
+
+
+api_user=jichg1986_test_T0JHIe&api_key=ZAMBmexA65kFvXgZ&from=test@test.com&fromname=来自测试发送&subject=测试&html=这是一封测试邮件&to=ben@ifaxin.com;joe@ifaxin.com&cc=bida@ifaxin.com&bcc=lianzimi@ifaxin.com&replyto=reply@test.com&label=89071&resp_email_id=true&x_smtpapi={"to":["84362484@qq.com"]}
+
+
+
+package com.gm.b2b.plugin.mvo.sellerInquiry;
+
+import java.io.IOException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+public class FirstDemo {
+ 
+    /**
+     * 通过GET方式发起http请求
+     */
+	
+	public static void main(String[] args) {
+		new FirstDemo().requestByGetMethod();
+	}
+  
+    public void requestByGetMethod(){
+    	
+    	System.setProperty("http.proxyHost", "proxy.neuedu.com");   
+		System.setProperty("http.proxyPort", "8080"); 
+        //创建默认的httpClient实例
+        CloseableHttpClient httpClient = getHttpClient();
+        try {
+            //用get方法发送http请求
+            HttpGet get = new HttpGet("http://www.baidu.com");
+            System.out.println("执行get请求:...."+get.getURI());
+            CloseableHttpResponse httpResponse = null;
+            //发送get请求
+            httpResponse = httpClient.execute(get);
+            try{
+                //response实体
+                HttpEntity entity = httpResponse.getEntity();
+                if (null != entity){
+                    System.out.println("响应状态码:"+ httpResponse.getStatusLine());
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("响应内容:" + EntityUtils.toString(entity));
+                    System.out.println("-------------------------------------------------");                    
+                }
+            }
+            finally{
+                httpResponse.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally{
+            try{
+                closeHttpClient(httpClient);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+ 
+    }
+    private CloseableHttpClient getHttpClient(){
+        return HttpClients.createDefault();
+    }
+     
+    private void closeHttpClient(CloseableHttpClient client) throws IOException{
+        if (client != null){
+            client.close();
+        }
+    }
+} 
+
+
+
+http://zhidao.baidu.com/link?url=4ULbptQtQfvD4Y3aHJIYFrnwG9hhP1YAafr3aISn4eyQdkOY_3YUKDXhI5u1eVbFV7sfaDoFKKJ5qcFHYM4ieXPQ-xacopxEaZrC6cypGTW
+
+
+token 参考 普通页面跳转 非ajax
+http://www.cnblogs.com/hdwpdx/archive/2016/03/29/5333943.html
